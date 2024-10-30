@@ -360,7 +360,9 @@ fn style_ansi_text(str: &str, config: &ConsoleConfiguration) -> LayoutJob {
     {
         // 1<red>2345</red>
         // 01234
-        let text = &str_without_ansi[(last_offset)..offset];
+        let Some(text) = &str_without_ansi.get((last_offset)..offset) else {
+            continue;
+        };
         if !text.is_empty() {
             layout_job.append(text, 0f32, current_style.clone());
         }
@@ -434,7 +436,7 @@ pub(crate) fn console_ui(
             .show(ctx, |ui| {
                 ui.style_mut().visuals.extreme_bg_color = config.background_color;
                 ui.style_mut().visuals.override_text_color = Some(config.foreground_color);
-
+                
                 ui.vertical(|ui| {
                     let scroll_height = ui.available_height() - 30.0;
 
